@@ -1,0 +1,19 @@
+{
+  "name": "homebridge-particle-bp",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brendonparker/homebridge-particle-bp.git"
+  },
+  "keywords": [],
+  "author": "Brendon Parker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brendonparker/homebridge-particle-bp/issues"
+  },
+  "homepage": "https://github.com/brendonparker/homebridge-particle-bp#readme",
+  "dependencies": {}
+}
