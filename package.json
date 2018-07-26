@@ -8,7 +8,7 @@
     "type": "git",
     "url": "git+https://github.com/brendonparker/homebridge-particle-bp.git"
   },
-  "keywords": [],
+  "keywords": ["homebridge-plugin"],
   "author": "Brendon Parker",
   "license": "MIT",
   "bugs": {
