@@ -15,5 +15,9 @@
     "url": "https://github.com/brendonparker/homebridge-particle-bp/issues"
   },
   "homepage": "https://github.com/brendonparker/homebridge-particle-bp#readme",
-  "dependencies": {}
+  "dependencies": {},
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  }
 }
