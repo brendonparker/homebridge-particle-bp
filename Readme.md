@@ -49,4 +49,4 @@ WantedBy=multi-user.target
 
 Type `systemctl status homebridge` to check the status of the service.
 
-Type `journalctl -f -u homebridge` to view the logs
+Type `journalctl -f -u homebridge` or `journalctl -u homebridge -S '20 seconds ago'` to view the logs
