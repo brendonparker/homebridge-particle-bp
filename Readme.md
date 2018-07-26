@@ -2,6 +2,8 @@
 
 Setup Instructions:
 - install homebridge globally: `sudo npm install -g homebridge@0.4.38`
+- install homebridge ui plugin: `sudo npm install -g homebridge-config-ui-x`
+  This gives a nice UI that should come up on your network @ `http://raspberry.local:8080`
 - `sudo nano /etc/default/homebridge` and paste this:
 
 ```
