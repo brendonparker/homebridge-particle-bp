@@ -1,7 +1,7 @@
 {
-  "name": "Brendons Custom Lights",
+  "name": "homebridge-particle-bp",
   "version": "0.1.0",
-  "description": "",
+  "description": "Brendon's Custom Lights via Particle",
   "main": "index.js",
   "scripts": {},
   "repository": {
