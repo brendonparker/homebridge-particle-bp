@@ -1,9 +1,10 @@
-#Running on Raspberry Pi:
+# Running on Raspberry Pi:
 
 Setup Instructions:
 - install homebridge globally: `sudo npm install -g homebridge@0.4.38`
 - `sudo nano /etc/default/homebridge` and paste this:
 
+```
     # Defaults / Configuration options for homebridge
     # The following settings tells homebridge where to find the config.json file and where to persist the data (i.e. pairing and others)
     HOMEBRIDGE_OPTS=-U /var/homebridge
@@ -11,9 +12,9 @@ Setup Instructions:
     # If you uncomment the following line, homebridge will log more 
     # You can display this via systemd's journalctl: journalctl -f -u homebridge
     # DEBUG=*
-
+```
 - `sudo nano /etc/systemd/system/homebridge.service` and paste this:
-
+```
     [Unit]
     Description=Node.js HomeKit Server 
     After=syslog.target network-online.target
@@ -29,7 +30,7 @@ Setup Instructions:
 
     [Install]
     WantedBy=multi-user.target
-
+```
 - Create a user to run service: `sudo useradd --system homebridge`
 - `sudo mkdir /var/homebridge`
 - `sudo cp ~/.homebridge/config.json /var/homebridge/`
