@@ -50,3 +50,18 @@ WantedBy=multi-user.target
 Type `systemctl status homebridge` to check the status of the service.
 
 Type `journalctl -f -u homebridge` or `journalctl -u homebridge -S '20 seconds ago'` to view the logs
+
+# Useful Stuff
+
+## VSCode / File Editing
+
+I found the _Remove VSCode_ extension for VS Code very helpful:
+https://spin.atomicobject.com/2017/12/18/remote-vscode-file-editing/
+
+
+## Reset Homebridge
+
+If I made significant code/config changes, I found it easiest to just remove the HomeBridge _"Bridge"_ from the iOS device, then do the following before re-adding it:
+
+- `sudo rm -rf /var/homebridge/accessories/`
+- `sudo rm -rf /var/homebridge/persist/`
