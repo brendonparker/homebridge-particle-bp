@@ -4,6 +4,7 @@ var Accessory, Service, Characteristic, UUIDGen;
 var ACCESS_TOKEN = '';
 var request = require('request');
 var LOG;
+
 module.exports = function (homebridge) {
   console.log("homebridge API version: " + homebridge.version);
 
@@ -30,30 +31,6 @@ function ParticlePlatform(log, config, api) {
   this.config = config;
   this.accessories = [];
   ACCESS_TOKEN = this.config.accessToken;
-
-  this.requestServer = http.createServer(function (request, response) {
-    if (request.url === "/add") {
-      this.addAccessory(new Date().toISOString());
-      response.writeHead(204);
-      response.end();
-    }
-
-    if (request.url == "/reachability") {
-      this.updateAccessoriesReachability();
-      response.writeHead(204);
-      response.end();
-    }
-
-    if (request.url == "/remove") {
-      this.removeAccessory();
-      response.writeHead(204);
-      response.end();
-    }
-  }.bind(this));
-
-  this.requestServer.listen(18081, function () {
-    platform.log("Server Listening...");
-  });
 
   if (api) {
     // Save the API object as plugin needs to register new accessory via this object
@@ -129,6 +106,8 @@ function WireUpAccessory(platform, accessory) {
 }
 
 function WireUpLightService(deviceId, service) {
+  var _h = .5, _s = .5, _l = .5, _updateTimeout;
+
   service.getCharacteristic(Characteristic.On)
     .on('set', function (value, callback) {
       invokeParticleApi(deviceId, "setMode", value ? "on" : "off")
@@ -137,38 +116,35 @@ function WireUpLightService(deviceId, service) {
 
   service.getCharacteristic(Characteristic.Hue)
     .on('set', function (value, callback) {
-      updateHughBrightness(value/360);
+      updateHughBrightness(value / 360);
       callback();
     });
 
   service.getCharacteristic(Characteristic.Saturation)
     .on('set', function (value, callback) {
-      updateHughBrightness(null, value/100);
+      updateHughBrightness(null, value / 100);
       callback();
     });
 
-  let currentTimeout;
   service.getCharacteristic(Characteristic.Brightness)
     .on('set', function (value, callback) {
-      clearTimeout(currentTimeout);
-      currentTimeout = setTimeout(function () {
+      clearTimeout(_updateTimeout);
+      _updateTimeout = setTimeout(function () {
         invokeParticleApi(deviceId, "setBright", value);
-        delete currentTimeout;
       }, 800);
       callback();
     });
 
-    var _h = .5, _s = .5, _l = .5, _updateTimeout;
-    function updateHughBrightness(hue, sat, light){
-      clearTimeout(_updateTimeout);
-      if(hue != null) _h = hue;
-      if(sat != null) _s = sat;
-      if(light != null) _l = light;
-      _updateTimeout = setTimeout(function(){
-        var rgb = hslToRgb(_h, _s, _l);
-        invokeParticleApi(deviceId, 'setRGB', rgb.join(' '));
-      }, 1000);
-    }
+  function updateHughBrightness(hue, sat, light) {
+    clearTimeout(_updateTimeout);
+    if (hue != null) _h = hue;
+    if (sat != null) _s = sat;
+    if (light != null) _l = light;
+    _updateTimeout = setTimeout(function () {
+      var rgb = hslToRgb(_h, _s, _l);
+      invokeParticleApi(deviceId, 'setRGB', rgb.join(' '));
+    }, 1000);
+  }
 }
 
 function hslToRgb(h, s, l) {
