@@ -8,8 +8,19 @@
     "description": "",
     "platforms": [
         {
-            "platform": "ParticleLight",
-            "name": "Particle Devices"
+            "platform": "ParticlePlatform",
+            "name": "Particle Devices",
+            "accessToken": "YOUR_ACCESS_TOKEN",
+            "devices": [
+                {
+                    "id": "YOUR_DEVICE_ID_1",
+                    "name": "Kitchen1"
+                },
+                {
+                    "id": "YOUR_DEVICE_ID_2",
+                    "name": "Kitchen2"
+                }
+            ]
         },
         {
             "platform": "config",
