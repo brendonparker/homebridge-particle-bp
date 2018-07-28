@@ -2,8 +2,7 @@ var http = require('http');
 var _ = require('lodash');
 var Accessory, Service, Characteristic, UUIDGen;
 var ACCESS_TOKEN = '';
-var URL = "https://api.spark.io/v1/devices/";
-
+var request = require('request');
 module.exports = function (homebridge) {
   console.log("homebridge API version: " + homebridge.version);
 
@@ -82,7 +81,7 @@ function ParticlePlatform(log, config, api) {
 ParticlePlatform.prototype.configureAccessory = function (accessory) {
   this.log(accessory.displayName, "Configure Accessory");
   var platform = this;
-
+  var deviceId = accessory.context.deviceId;
   // Set the accessory to reachable if plugin can currently process the accessory,
   // otherwise set to false and update the reachability later by invoking 
   // accessory.updateReachability()
@@ -97,7 +96,7 @@ ParticlePlatform.prototype.configureAccessory = function (accessory) {
     accessory.getService(Service.Lightbulb)
       .getCharacteristic(Characteristic.On)
       .on('set', function (value, callback) {
-        platform.log(accessory.displayName, "Light -> " + value);
+        invokeParticleApi(deviceId, "setMode", value ? "on" : "off");
         callback();
       });
   }
@@ -112,6 +111,8 @@ ParticlePlatform.prototype.addAccessory = function (deviceName, deviceId) {
   var uuid = UUIDGen.generate(deviceName);
 
   var newAccessory = new Accessory(deviceName, uuid);
+  newAccessory.context.deviceId = deviceId;
+  
   newAccessory.on('identify', function (paired, callback) {
     platform.log(newAccessory.displayName, "Identify!!!");
     callback();
@@ -120,13 +121,26 @@ ParticlePlatform.prototype.addAccessory = function (deviceName, deviceId) {
   // newAccessory.context.something = "Something"
 
   // Make sure you provided a name for service, otherwise it may not visible in some HomeKit apps
-  newAccessory.addService(Service.Lightbulb, "deviceName")
+  newAccessory.addService(Service.Lightbulb, deviceName)
     .getCharacteristic(Characteristic.On)
     .on('set', function (value, callback) {
-      platform.log(newAccessory.displayName, "Light -> " + value);
+      invokeParticleApi(deviceId, "setMode", value ? "on" : "off");
       callback();
     });
 
   this.accessories.push(newAccessory);
   this.api.registerPlatformAccessories("homebridge-particle-bp", "ParticlePlatform", [newAccessory]);
+}
+
+function invokeParticleApi(deviceId, command, args) {
+  request({
+    method: 'POST',
+    url: `https://api.particle.io/v1/devices/${deviceId}/${command}`,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': '*.*',
+      'Authorization': 'Bearer ' + ACCESS_TOKEN
+    },
+    form: { args: args }
+  });
 }
