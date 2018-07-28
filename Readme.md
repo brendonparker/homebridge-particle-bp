@@ -65,3 +65,4 @@ If I made significant code/config changes, I found it easiest to just remove the
 
 - `sudo rm -rf /var/homebridge/accessories/`
 - `sudo rm -rf /var/homebridge/persist/`
+- `sudo systemctl restart homebridge`
